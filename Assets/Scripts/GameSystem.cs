@@ -20,8 +20,8 @@ public class GameSystem : MonoBehaviour
         GameSetting();
         InitializeGame();
 
-        if(!Locator<SpriteCount>.IsValid()) Locator<SpriteCount>.Bind(new SpriteCount());
-        Locator<SpriteCount>.I.CalcSpriteCount();
+        // if(!Locator<SpriteCount>.IsValid()) Locator<SpriteCount>.Bind(new SpriteCount());
+        // Locator<SpriteCount>.I.CalcSpriteCount();
     }
 
     private void GameSetting(){

@@ -7,6 +7,9 @@ public class Selecter : MonoBehaviour
     [SerializeField] private Material PutError;
     [SerializeField] private Material Normal;
 
+    [SerializeField,Header("Guide")]
+    private GameObject goGuide;
+
     /// <summary>
     /// y座標とx座標
     /// </summary>
@@ -14,15 +17,20 @@ public class Selecter : MonoBehaviour
     public int posX;
 
     /// <summary>
+    /// マウスが押された時
+    /// </summary>
+    public void OnMouseDown()
+    {
+        if (GameManager.I.currTurn == GameManager.TURN_ENEMY) return;
+        PlayerSystem.I.PutSprite(posY, posX);
+    }
+
+    /// <summary>
     /// マウスが入った時
     /// </summary>
     public void OnMouseEnter()
     {
-        if (!Locator<GetSpriteCheck>.IsValid()) {
-            Locator<GetSpriteCheck>.Bind(new GetSpriteCheck());
-        }
-
-        string spritePos = Locator<GetSpriteCheck>.I.GetSpritePosition(posY, posX, GameManager.I.fieldState, GameManager.I.yourSprite, GameManager.I.enemySprite);
+        string spritePos = GetSpriteCheck.I.GetSpritePosition(posY, posX, GameManager.I.fieldState, GameManager.I.yourSprite, GameManager.I.enemySprite);
         gameObject.GetComponent<MeshRenderer>().material = spritePos != string.Empty ? PutOn : PutError;
     }
 
@@ -39,13 +47,9 @@ public class Selecter : MonoBehaviour
     /// </summary>
     /// <param name="State">駒の状態</param>
     public void SetState(int State){
-        if (!Locator<GetSpriteCheck>.IsValid()) {
-            Locator<GetSpriteCheck>.Bind(new GetSpriteCheck());
-        }
+        string spritePos = GetSpriteCheck.I.GetSpritePosition(posY, posX, GameManager.I.fieldState, GameManager.I.yourSprite, GameManager.I.enemySprite);
 
-        string spritePos = Locator<GetSpriteCheck>.I.GetSpritePosition(posY, posX, GameManager.I.fieldState, GameManager.I.yourSprite, GameManager.I.enemySprite);
-
-        gameObject.SetActive(State == GameManager.SPRITE_NONE);
-        gameObject.transform.gameObject.SetActive(spritePos != string.Empty && State == GameManager.SPRITE_NONE && GameManager.I.isGuide);
+        gameObject.SetActive(State == GameManager.SPRITE_NONE && GameManager.I.currTurn == GameManager.TURN_YOUR );
+        goGuide.SetActive(spritePos != string.Empty && GameManager.I.isGuide);
     }
 }

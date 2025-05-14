@@ -1,8 +1,11 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : MonoBehaviour
 {
+    private static GameManager _instance = null;
+    public static GameManager I { get; private set; } = _instance;
+
     /// <summary>
     /// 盤面サイズ
     /// </summary>
@@ -60,4 +63,12 @@ public class GameManager : Singleton<GameManager>
 
     public bool isGuide = true;
 
+    private void Awake() {
+        if (_instance == null) {
+            _instance = this;
+            I = _instance;
+        } else if (_instance != this) {
+            Destroy(gameObject);
+        }
+    }
 }

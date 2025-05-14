@@ -2,15 +2,36 @@ using UnityEngine;
 
 public class GetSpriteCheck
 {
+    private static GetSpriteCheck _instance = new GetSpriteCheck();
+    public static GetSpriteCheck I { get; private set; } = _instance;
+
     private const int DIRECTION_COUNT = 8;
 
-    public void OnEnable() {
-        Locator<GetSpriteCheck>.Bind(this);
+    private int[][] juggedArray;
+
+    public int[][] ConvertJuggedArray(string str){
+        int idx = 0;
+        if (str == string.Empty){
+            return null;
+        }
+
+        juggedArray = new int[str.Split(' ').Length][];
+        foreach (string item in str.Split(' '))
+        {
+            string[] pos = item.Split(',');
+            juggedArray[idx] = new int[pos.Length];
+
+            int y = int.Parse(pos[0]);
+            int x = int.Parse(pos[1]);
+
+            juggedArray[idx][0] = y;
+            juggedArray[idx][1] = x;
+            idx++;
+        }
+
+        return juggedArray;
     }
 
-    public void OnDisable() {
-        Locator<GetSpriteCheck>.Unbind(this);
-    }
 
     /// <summary>
     /// 獲得できる駒を探す
