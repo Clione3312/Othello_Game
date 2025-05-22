@@ -231,9 +231,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b50e5d928f8d3074797b00fb55f16f0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PutOn: {fileID: 2100000, guid: 27859ea557401d74da1dd7b0316bacbb, type: 2}
-  PutError: {fileID: 2100000, guid: 76224822fe032a64fa7445fbefa1d437, type: 2}
-  Normal: {fileID: 2100000, guid: d11be4483cbe86e468c307b29397fc96, type: 2}
-  goGuide: {fileID: 1805104027580568589}
+  _None: {fileID: 2100000, guid: d11be4483cbe86e468c307b29397fc96, type: 2}
+  _Select: {fileID: 2100000, guid: 27859ea557401d74da1dd7b0316bacbb, type: 2}
+  _guide: {fileID: 2756017737036152192}
   posY: 0
   posX: 0

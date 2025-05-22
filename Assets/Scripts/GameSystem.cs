@@ -1,52 +1,67 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameSystem : MonoBehaviour
 {
-    [SerializeField, Header("Othello Board")]
-    private GameObject _Board;
+    // [SerializeField, Header("Othello Board")]
+    // private GameObject[] OthelloBoard;
 
     [SerializeField, Header("Sprite")]
     private Sprite _Sprite;
-    [SerializeField]private Transform _Sprites;
+    [SerializeField] private Transform _Sprites;
 
     [SerializeField, Header("Selecter")]
     private Selecter _Selecter;
-    [SerializeField]private Transform _Selecters;
-
+    [SerializeField] private Transform _Selecters;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        GameSetting();
-        InitializeGame();
-
-        // if(!Locator<SpriteCount>.IsValid()) Locator<SpriteCount>.Bind(new SpriteCount());
-        // Locator<SpriteCount>.I.CalcSpriteCount();
+        TurnSet();
+        InitializeFieldState();
+        SetState();
+        SetGuide();
     }
 
-    private void GameSetting(){
-        if (true) {
-            GameManager.I.yourSprite = GameManager.SPRITE_BLACK;
-            GameManager.I.enemySprite = GameManager.SPRITE_WHITE;
-        } else {
-
-        }
+    private void Update()
+    {
+        SetGuide();
     }
+
 
     /// <summary>
-    /// 初期化
+    /// ターンのセット
     /// </summary>
-    private void InitializeGame(){
-        for(int y = 0; y < GameManager.BOARD_SIZE; y++){
-            for(int x = 0; x < GameManager.BOARD_SIZE; x++){
-                var sprite = Instantiate(_Sprite, new Vector3(y - GameManager.INST_OFFSET, GameManager.INST_OFFSET_Y, x - GameManager.INST_OFFSET), Quaternion.identity, _Sprites);
-                var selecter = Instantiate(_Selecter, new Vector3(y - GameManager.INST_OFFSET, GameManager.INST_OFFSET_Y, x - GameManager.INST_OFFSET), Quaternion.identity, _Selecters);
+    private void TurnSet()
+    {
+        // 駒を取得する
+        GameManager.I.yourSprite = GameManager.I.selectSprite == GameManager.SPRITE_BLACK ? GameManager.SPRITE_BLACK : GameManager.SPRITE_WHITE;
+        GameManager.I.enemySprite = GameManager.I.selectSprite == GameManager.SPRITE_BLACK ? GameManager.SPRITE_WHITE : GameManager.SPRITE_BLACK;
 
-                GameManager.I.fieldSprite[y][x] = sprite;
+        // ターンをセットする
+        GameManager.I.currTurn = GameManager.I.selectSprite == GameManager.SPRITE_BLACK ? GameManager.TURN_YOUR : GameManager.TURN_ENEMY;
+    }
 
-                GameManager.I.fieldSelecter[y][x] = selecter;
-                GameManager.I.fieldSelecter[y][x].posY = y;
-                GameManager.I.fieldSelecter[y][x].posX = x;
+    private void InitializeFieldState()
+    {
+        for (int posY = 0; posY < GameManager.BOARD_SIZE; posY++)
+        {
+            for (int posX = 0; posX < GameManager.BOARD_SIZE; posX++)
+            {
+                float offsetY = (posY >= 3 && posY <= 4 && posX >= 3 && posX <= 4) ? 0f : 1f;
+
+                var sprite = Instantiate(_Sprite, new Vector3(posY - GameManager.INST_OFFSET, GameManager.INST_OFFSET_Y + offsetY, posX - GameManager.INST_OFFSET), Quaternion.identity, _Sprites);
+                var selecter = Instantiate(_Selecter, new Vector3(posY - GameManager.INST_OFFSET, GameManager.INST_OFFSET_Y, posX - GameManager.INST_OFFSET), Quaternion.identity, _Selecters);
+
+                GameManager.I.fieldState[posY][posX] = GameManager.SPRITE_NONE;
+
+                // 駒の設定
+                GameManager.I.fieldSprite[posY][posX] = sprite;
+
+                // セレクターの設定
+                GameManager.I.fieldSelecter[posY][posX] = selecter;
+                GameManager.I.fieldSelecter[posY][posX].posY = posY;
+                GameManager.I.fieldSelecter[posY][posX].posX = posX;
             }
         }
 
@@ -56,20 +71,25 @@ public class GameSystem : MonoBehaviour
         GameManager.I.fieldState[4][4] = GameManager.SPRITE_WHITE;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void SetState()
     {
-        UpdateFieldState();
+        for (int posY = 0; posY < GameManager.BOARD_SIZE; posY++)
+        {
+            for (int posX = 0; posX < GameManager.BOARD_SIZE; posX++)
+            {
+                GameManager.I.fieldSprite[posY][posX].SetState(GameManager.I.fieldState[posY][posX]);
+                GameManager.I.fieldSelecter[posY][posX].SetState(GameManager.I.fieldState[posY][posX]);
+            }
+        }
     }
 
-    /// <summary>
-    /// フィールドの状態を更新
-    /// </summary>
-    private void UpdateFieldState(){
-        for(int y = 0; y < GameManager.BOARD_SIZE; y++){
-            for(int x = 0; x < GameManager.BOARD_SIZE; x++){
-                GameManager.I.fieldSprite[y][x].SetState(GameManager.I.fieldState[y][x]);
-                GameManager.I.fieldSelecter[y][x].SetState(GameManager.I.fieldState[y][x]);
+    private void SetGuide()
+    {
+        for (int posY = 0; posY < GameManager.BOARD_SIZE; posY++)
+        {
+            for (int posX = 0; posX < GameManager.BOARD_SIZE; posX++)
+            {
+                GameManager.I.fieldSelecter[posY][posX].SetGuide(GameManager.I.fieldState[posY][posX]);
             }
         }
     }

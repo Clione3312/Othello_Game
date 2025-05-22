@@ -2,15 +2,17 @@ using UnityEngine;
 
 public class Sprite : MonoBehaviour
 {
-    public void SetState(int State){
-        gameObject.SetActive(State != GameManager.SPRITE_NONE);
-        switch (State)
+    public void SetState(int state)
+    {
+        gameObject.SetActive(state != GameManager.SPRITE_NONE);
+
+        switch (state)
         {
             case GameManager.SPRITE_BLACK:
-                gameObject.transform.localRotation = Quaternion.Euler(0, 0, 0);
+                transform.rotation = Quaternion.Euler(0, 0, 0);
                 break;
             case GameManager.SPRITE_WHITE:
-                gameObject.transform.localRotation = Quaternion.Euler(180, 0, 0);
+                transform.rotation = Quaternion.Euler(180, 0, 0);
                 break;
         }
     }

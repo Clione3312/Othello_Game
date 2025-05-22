@@ -14,6 +14,19 @@ public class GameManager : MonoBehaviour
     public const float INST_OFFSET = 3.5f;
     public const float INST_OFFSET_Y = 0.4f;
 
+    public enum GamePhase {
+        Idle,
+        Check,
+        Calc,
+        Start,
+        Action,
+        Update,
+        Close,
+        GameEnd
+    }
+    public GamePhase gpYour = GamePhase.Idle;
+    public GamePhase gpEnemy = GamePhase.Idle;
+
     /// <summary>
     /// ゲーム難易度
     /// </summary>
@@ -57,17 +70,32 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 自分/相手のターン
     /// </summary>
-    public const int TURN_YOUR = 0;
-    public const int TURN_ENEMY = 1;
+    public const int TURN_IDLE = 0;
+    public const int TURN_YOUR = 1;
+    public const int TURN_ENEMY = 2;
     public int currTurn = 0;
 
     public bool isGuide = true;
 
-    private void Awake() {
-        if (_instance == null) {
+    /// <summary>
+    /// 選択した駒の位置
+    /// </summary>
+    public int selectSprite = SPRITE_BLACK;
+
+    /// <summary>
+    /// 選択した駒の位置
+    /// </summary>
+    public string selectAddress = string.Empty;
+
+    private void Awake()
+    {
+        if (_instance == null)
+        {
             _instance = this;
             I = _instance;
-        } else if (_instance != this) {
+        }
+        else if (_instance != this)
+        {
             Destroy(gameObject);
         }
     }

@@ -2,54 +2,47 @@ using UnityEngine;
 
 public class Selecter : MonoBehaviour
 {
-    [SerializeField,Header("Materials")]
-    private Material PutOn;
-    [SerializeField] private Material PutError;
-    [SerializeField] private Material Normal;
+    [Header("Materials")]
+    [SerializeField] private Material _None;
+    [SerializeField] private Material _Select;
 
-    [SerializeField,Header("Guide")]
-    private GameObject goGuide;
+    [Header("Calc Sprite")]
+    private CalcSprite calcSprite = new CalcSprite();
 
-    /// <summary>
-    /// y座標とx座標
-    /// </summary>
-    public int posY;
-    public int posX;
+    [Header("Guide")]
+    [SerializeField] private Transform _guide;
 
-    /// <summary>
-    /// マウスが押された時
-    /// </summary>
+    public int posY = 0;
+    public int posX = 0;
+
     public void OnMouseDown()
     {
-        if (GameManager.I.currTurn == GameManager.TURN_ENEMY) return;
-        PlayerSystem.I.PutSprite(posY, posX);
+        string putPosition = calcSprite.GetSpritesPosition(posY, posX, GameManager.I.fieldState, GameManager.I.yourSprite, GameManager.I.enemySprite);
+        if (putPosition != string.Empty) GameManager.I.selectAddress = string.Format("{0},{1}", posY, posX);
     }
 
-    /// <summary>
-    /// マウスが入った時
-    /// </summary>
     public void OnMouseEnter()
     {
-        string spritePos = GetSpriteCheck.I.GetSpritePosition(posY, posX, GameManager.I.fieldState, GameManager.I.yourSprite, GameManager.I.enemySprite);
-        gameObject.GetComponent<MeshRenderer>().material = spritePos != string.Empty ? PutOn : PutError;
+        string putPosition = calcSprite.GetSpritesPosition(posY, posX, GameManager.I.fieldState, GameManager.I.yourSprite, GameManager.I.enemySprite);
+        if (putPosition != string.Empty) GetComponent<MeshRenderer>().material = _Select;
     }
 
-    /// <summary>
-    /// マウスが離れた時
-    /// </summary>
     public void OnMouseExit()
     {
-        gameObject.GetComponent<MeshRenderer>().material = Normal;
+        GetComponent<MeshRenderer>().material = _None;
     }
 
-    /// <summary>
-    /// 状態を設定
-    /// </summary>
-    /// <param name="State">駒の状態</param>
-    public void SetState(int State){
-        string spritePos = GetSpriteCheck.I.GetSpritePosition(posY, posX, GameManager.I.fieldState, GameManager.I.yourSprite, GameManager.I.enemySprite);
+    public void SetState(int state)
+    {
+        string putPosition = calcSprite.GetSpritesPosition(posY, posX, GameManager.I.fieldState, GameManager.I.yourSprite, GameManager.I.enemySprite);
 
-        gameObject.SetActive(State == GameManager.SPRITE_NONE && GameManager.I.currTurn == GameManager.TURN_YOUR );
-        goGuide.SetActive(spritePos != string.Empty && GameManager.I.isGuide);
+        gameObject.SetActive(state == GameManager.SPRITE_NONE && GameManager.I.currTurn == GameManager.TURN_YOUR);
+    }
+
+    public void SetGuide(int state)
+    {
+        string putPosition = calcSprite.GetSpritesPosition(posY, posX, GameManager.I.fieldState, GameManager.I.yourSprite, GameManager.I.enemySprite);
+
+        _guide.gameObject.SetActive(state == GameManager.SPRITE_NONE && GameManager.I.currTurn == GameManager.TURN_YOUR && GameManager.I.isGuide && putPosition != string.Empty);
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ESCMenu : MonoBehaviour
 {
@@ -11,5 +12,9 @@ public class ESCMenu : MonoBehaviour
 
     public void CloseESCMenu() {
         escMenu.gameObject.SetActive(false);
+    }
+
+    public void RestartMenu() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
