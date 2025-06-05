@@ -233,6 +233,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _None: {fileID: 2100000, guid: d11be4483cbe86e468c307b29397fc96, type: 2}
   _Select: {fileID: 2100000, guid: 27859ea557401d74da1dd7b0316bacbb, type: 2}
-  _guide: {fileID: 2756017737036152192}
-  posY: 0
-  posX: 0
+  _guide: {fileID: 1805104027580568589}
