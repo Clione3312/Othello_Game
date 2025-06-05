@@ -6,14 +6,6 @@ using UnityEngine.SceneManagement;
 public class ESCMenu : MonoBehaviour
 {
     [SerializeField]private FadeSystem fade;
-    private enum Title : int
-    {
-        Title,
-        Menu,
-        Setting,
-        Option,
-        Exit
-    }
 
     private string sceneName = string.Empty;
     private const string TITLE_SCENE = "Title";
@@ -39,14 +31,14 @@ public class ESCMenu : MonoBehaviour
 
     public void ResettingMenu()
     {
-        GameManager.I.TitleMode((int)Title.Setting);
+        GameManager.I.titleMode = GameManager.Title.Setting;
         sceneName = TITLE_SCENE;
         ChangeScene();
     }
 
     public void TitleMenu()
     {
-        GameManager.I.TitleMode((int)Title.Menu);
+        GameManager.I.titleMode = GameManager.Title.Menu;
         sceneName = TITLE_SCENE;
         ChangeScene();
     }

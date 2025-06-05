@@ -26,14 +26,14 @@ public class ResultMenu : MonoBehaviour
 
     public void ResettingMenu()
     {
-        GameManager.I.TitleMode((int)Title.Setting);
+        GameManager.I.titleMode = GameManager.Title.Setting;
         sceneName = TITLE_SCENE;
         ChangeScene();
     }
 
     public void TitleMenu()
     {
-        GameManager.I.TitleMode((int)Title.Menu);
+        GameManager.I.titleMode = GameManager.Title.Menu;
         sceneName = TITLE_SCENE;
         ChangeScene();
     }

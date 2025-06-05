@@ -2,6 +2,84 @@
     "name": "OthelloPlayer",
     "maps": [
         {
+            "name": "Title",
+            "id": "7ace223f-d2b6-4919-9c8a-e42913d8268a",
+            "actions": [
+                {
+                    "name": "GameStart",
+                    "type": "Button",
+                    "id": "c8a90c67-12d0-4416-bc33-ac3f3539d94d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "496e8b4c-8900-4d95-ae40-47c84d1ad0b8",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "GameStart",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "77b49619-c007-467c-863a-1f5b4c4c41c2",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "GameStart",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Menu",
+            "id": "7b8bf78e-88b5-472e-bda3-2c6ae473bf61",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Button",
+                    "id": "e2e768a8-0aa1-4c1c-8630-65d802c244f6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "6d68c4dc-7d2a-4cb0-82c1-98faa8914b22",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "72cec6eb-edfb-4967-bd9d-b4bad7868fae",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "Player",
             "id": "759488ab-1af5-4b67-a191-651d9d4dac55",
             "actions": [

@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     /// タイトル画面
     /// </summary>
     #region TitleMenu
-    private enum Title
+    public enum Title
     {
         Title,
         Menu,
@@ -19,23 +19,7 @@ public class GameManager : MonoBehaviour
         Option,
         Exit
     }
-    private Title titleMode = Title.Title;
-    public void TitleMode(int mode)
-    {
-        if ((int)mode < 0)
-        {
-            titleMode = Title.Title;
-        }
-        else if ((int)mode > System.Enum.GetValues(typeof(Title)).Length - 1)
-        {
-            titleMode = Title.Exit;
-        }
-        else
-        {
-            titleMode = (Title)mode;
-        }
-    }
-    public int TitleMode() { return (int)titleMode; }
+    public GameManager.Title titleMode = Title.Title;
     #endregion
 
     /// <summary>
