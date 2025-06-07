@@ -84,7 +84,7 @@ public class StateMachine<TOwner>
     }
 
     public void Update() {
-        CurrentState.Update();
+        if (CurrentState != null) CurrentState.Update();
     }
 
     public void Dispatch(int eventId) {

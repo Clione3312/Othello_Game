@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
         Option,
         Exit
     }
-    public GameManager.Title titleMode = Title.Title;
+    public Title titleMode = Title.Title;
     #endregion
 
     /// <summary>

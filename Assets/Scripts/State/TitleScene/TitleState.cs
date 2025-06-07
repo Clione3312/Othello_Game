@@ -19,17 +19,19 @@ public class TitleState : MonoBehaviour
     [SerializeField] public FadeSystem fade;
     #endregion
 
+    #region Public
+    [Header("Base Panel")]
+    [SerializeField] public TitleBase titleBase;
+    #endregion
+
     #region Title
-    [Header("Start")]
-    [SerializeField] public CanvasGroup titlePanel;
-    [SerializeField] public CanvasGroup titleLogo;
-    [SerializeField] public CanvasGroup titleText;
+    [Header("Title Panel")]
+    [SerializeField] public TitleStart titleStart;
     #endregion
 
     #region Menu
     [Header("Menu Panel")]
-    [SerializeField] public CanvasGroup menuPanel;
-    [SerializeField] public CanvasGroup menuObject;
+    [SerializeField] public TitleMenu titleMenu;
     #endregion
 
     public Sequence sequence;
@@ -44,6 +46,7 @@ public class TitleState : MonoBehaviour
         _stateMachine = new StateMachine<TitleState>(this);
 
         _stateMachine.AddAnyTransition<PhaseMenu>((int)GameManager.Title.Menu);
+        _stateMachine.AddTransition<PhaseMenu, PhaseTitle>((int)GameManager.Title.Title);
         _stateMachine.AddTransition<PhaseMenu, PhaseSetting>((int)GameManager.Title.Setting);
         _stateMachine.AddTransition<PhaseMenu, PhaseOption>((int)GameManager.Title.Option);
         _stateMachine.AddTransition<PhaseMenu, PhaseExit>((int)GameManager.Title.Exit);
@@ -63,14 +66,10 @@ public class TitleState : MonoBehaviour
         }
     }
 
-    public async void GameStart()
+    public void GameStart()
     {
-        await titleText.DOFade(0, 1.0f).Play().AsyncWaitForCompletion();
-        await titleLogo.DOFade(0, 1.0f).Play().AsyncWaitForCompletion();
-        titlePanel.gameObject.SetActive(false);
-        isStart = true;
+        titleStart.SetIsStart(true);
     }
-
 
     // Update is called once per frame
     private void Update()
@@ -83,24 +82,16 @@ internal class PhaseTitle : State
 {
     protected override async void OnEnter(State prevState)
     {
-        await ShowTitle();
+        GameManager.I.titleMode = GameManager.Title.Title;
+        await Owner.titleBase.UpdateBgPanel();
+        await Owner.titleStart.ShowTitle();
     }
 
-    private async UniTask ShowTitle()
+    protected override async void OnUpdate()
     {
-        Owner.titlePanel.gameObject.SetActive(true);
-
-        await Owner.titleLogo.DOFade(1, 5f).Play().AsyncWaitForCompletion();
-        await UniTask.WaitForSeconds(1.0f);
-        await Owner.titleText.DOFade(1, 2.0f).SetLoops(-1, LoopType.Yoyo).Play().AsyncWaitForCompletion();
-    }
-
-
-    protected override void OnUpdate()
-    {
-        if (Owner.isStart)
+        if (Owner.titleStart.isStart)
         {
-            Owner.isStart = false;
+            await Owner.titleStart.HideTitle();
             StateMachine.Dispatch((int)GameManager.Title.Menu);
         }
     }
@@ -110,14 +101,32 @@ internal class PhaseMenu : State
 {
     protected override async void OnEnter(State prevState)
     {
-        await ShowMenu();
+        GameManager.I.titleMode = GameManager.Title.Menu;
+        await Owner.titleBase.UpdateBgPanel();
+        await Owner.titleMenu.ShowMenu();
     }
 
-    private async UniTask ShowMenu()
+    protected override async void OnUpdate()
     {
-        Owner.menuPanel.gameObject.SetActive(true);
-
-        await Owner.menuObject.DOFade(1, 3f).Play().AsyncWaitForCompletion();
+        switch (GameManager.I.titleMode)
+        {
+            case GameManager.Title.Title:
+                await Owner.titleMenu.HideMenu();
+                StateMachine.Dispatch((int)GameManager.Title.Title);
+                break;
+            case GameManager.Title.Setting:
+                await Owner.titleMenu.HideMenu();
+                StateMachine.Dispatch((int)GameManager.Title.Setting);
+                break;
+            case GameManager.Title.Option:
+                await Owner.titleMenu.HideMenu();
+                StateMachine.Dispatch((int)GameManager.Title.Option);
+                break;
+            case GameManager.Title.Exit:
+                await Owner.titleMenu.HideMenu();
+                StateMachine.Dispatch((int)GameManager.Title.Exit);
+                break;
+        }
     }
 }
 
