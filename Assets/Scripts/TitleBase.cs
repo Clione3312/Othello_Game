@@ -19,6 +19,9 @@ public class TitleBase : MonoBehaviour
             case GameManager.Title.Menu:
                 await bgPanel.transform.DOScale(1f, 1.0f).Play().AsyncWaitForCompletion();
                 break;
+            case GameManager.Title.Setting:
+                await bgPanel.transform.DOScale(1.4f, 1.0f).Play().AsyncWaitForCompletion();
+                break;
         }
     }
 }

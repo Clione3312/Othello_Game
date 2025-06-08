@@ -34,6 +34,11 @@ public class TitleState : MonoBehaviour
     [SerializeField] public TitleMenu titleMenu;
     #endregion
 
+    #region Setting
+    [Header("Setting Panel")]
+    [SerializeField] public TitleSetting titleSetting;
+    #endregion
+
     public Sequence sequence;
 
     public bool isStart = false;
@@ -50,6 +55,7 @@ public class TitleState : MonoBehaviour
         _stateMachine.AddTransition<PhaseMenu, PhaseSetting>((int)GameManager.Title.Setting);
         _stateMachine.AddTransition<PhaseMenu, PhaseOption>((int)GameManager.Title.Option);
         _stateMachine.AddTransition<PhaseMenu, PhaseExit>((int)GameManager.Title.Exit);
+        _stateMachine.AddTransition<PhaseSetting, PhaseGameStart>((int)GameManager.Title.Start);
 
         await fade.FadeIn();
         switch (GameManager.I.titleMode)
@@ -64,11 +70,6 @@ public class TitleState : MonoBehaviour
                 _stateMachine.Start<PhaseSetting>();
                 break;
         }
-    }
-
-    public void GameStart()
-    {
-        titleStart.SetIsStart(true);
     }
 
     // Update is called once per frame
@@ -89,7 +90,7 @@ internal class PhaseTitle : State
 
     protected override async void OnUpdate()
     {
-        if (Owner.titleStart.isStart)
+        if (GameManager.I.titleMode == GameManager.Title.Menu)
         {
             await Owner.titleStart.HideTitle();
             StateMachine.Dispatch((int)GameManager.Title.Menu);
@@ -101,7 +102,6 @@ internal class PhaseMenu : State
 {
     protected override async void OnEnter(State prevState)
     {
-        GameManager.I.titleMode = GameManager.Title.Menu;
         await Owner.titleBase.UpdateBgPanel();
         await Owner.titleMenu.ShowMenu();
     }
@@ -123,7 +123,7 @@ internal class PhaseMenu : State
                 StateMachine.Dispatch((int)GameManager.Title.Option);
                 break;
             case GameManager.Title.Exit:
-                await Owner.titleMenu.HideMenu();
+                // await Owner.titleMenu.HideMenu();
                 StateMachine.Dispatch((int)GameManager.Title.Exit);
                 break;
         }
@@ -132,12 +132,82 @@ internal class PhaseMenu : State
 
 internal class PhaseSetting : State
 {
+    protected override async void OnEnter(State prevState)
+    {
+        await Owner.titleBase.UpdateBgPanel();
+        await Owner.titleSetting.ShowSetting();
+    }
+
+    protected override async void OnUpdate()
+    {
+        switch (GameManager.I.titleMode)
+        {
+            case GameManager.Title.Menu:
+                await Owner.titleSetting.HideSetting();
+                StateMachine.Dispatch((int)GameManager.Title.Menu);
+                break;
+            case GameManager.Title.Start:
+                await Owner.titleSetting.HideSetting();
+                StateMachine.Dispatch((int)GameManager.Title.Start);
+                break;
+        }
+    }
 }
 
 internal class PhaseOption : State
 {
+    // protected override async void OnEnter(State prevState)
+    // {
+    //     await Owner.titleBase.UpdateBgPanel();
+    //     await Owner.titleMenu.ShowOption();
+    // }
+
+    // protected override async void OnUpdate()
+    // {
+    //     switch (GameManager.I.titleMode)
+    //     {
+    //         case GameManager.Title.Menu:
+    //             await Owner.titleMenu.HideOption();
+    //             StateMachine.Dispatch((int)GameManager.Title.Menu);
+    //             break;
+    //     }
+    // }
 }
 
 internal class PhaseExit : State
 {
+    // protected override async void OnEnter(State prevState)
+    // {
+    //     await Owner.titleMenu.ShowExit();
+    // }
+
+    // protected override async void OnUpdate()
+    // {
+    //     switch (GameManager.I.titleMode)
+    //     {
+    //         case GameManager.Title.Menu:
+    //             await Owner.titleMenu.HideOption();
+    //             StateMachine.Dispatch((int)GameManager.Title.Menu);
+    //             break;
+    //     }
+    // }
+}
+
+internal class PhaseGameStart : State
+{
+    // protected override async void OnEnter(State prevState)
+    // {
+    //     await Owner.titleMenu.ShowExit();
+    // }
+
+    // protected override async void OnUpdate()
+    // {
+    //     switch (GameManager.I.titleMode)
+    //     {
+    //         case GameManager.Title.Menu:
+    //             await Owner.titleMenu.HideOption();
+    //             StateMachine.Dispatch((int)GameManager.Title.Menu);
+    //             break;
+    //     }
+    // }
 }

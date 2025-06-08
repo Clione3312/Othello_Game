@@ -17,7 +17,8 @@ public class GameManager : MonoBehaviour
         Menu,
         Setting,
         Option,
-        Exit
+        Exit,
+        Start
     }
     public Title titleMode = Title.Title;
     #endregion
@@ -128,7 +129,7 @@ public class GameManager : MonoBehaviour
     /// 相手の難易度
     /// </summary>
     #region Difficulity
-    private enum EnemyDifficulity
+    public enum EnemyDifficulity
     {
         Easy,
         Normal,
@@ -165,7 +166,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 盤面上の石の状態
     /// </summary>
-    private int[][] fieldState = new int[][]{new int[BOARD_SIZE], new int[BOARD_SIZE], new int[BOARD_SIZE], new int[BOARD_SIZE], new int[BOARD_SIZE], new int[BOARD_SIZE], new int[BOARD_SIZE], new int[BOARD_SIZE]};
+    private int[][] fieldState = new int[][] { new int[BOARD_SIZE], new int[BOARD_SIZE], new int[BOARD_SIZE], new int[BOARD_SIZE], new int[BOARD_SIZE], new int[BOARD_SIZE], new int[BOARD_SIZE], new int[BOARD_SIZE] };
     public int[][] FieldState() { return fieldState; }
     public int FieldState(int posY, int posX) { return fieldState[posY][posX]; }
     public void FieldState(int posY, int posX, int state) { fieldState[posY][posX] = state; }
@@ -185,6 +186,11 @@ public class GameManager : MonoBehaviour
     /// 自分/相手の石の種類
     /// </summary>
     #region PlayerSprite
+    public enum SpriteType
+    {
+        Black,
+        White
+    }
     private int yourSprite = SPRITE_BLACK;
     private int enemySprite = SPRITE_WHITE;
     public void YourSprite(int sprite) { yourSprite = sprite; }
@@ -212,8 +218,8 @@ public class GameManager : MonoBehaviour
         {
             for (int posX = 0; posX < BOARD_SIZE; posX++)
             {
-                if(fieldState[posY][posX] == yourSprite) yourScore.Value++;//自分の石を数える
-                if(fieldState[posY][posX] == enemySprite) enemyScore.Value++;//相手の石を数える
+                if (fieldState[posY][posX] == yourSprite) yourScore.Value++;//自分の石を数える
+                if (fieldState[posY][posX] == enemySprite) enemyScore.Value++;//相手の石を数える
             }
         }
     }
@@ -233,8 +239,8 @@ public class GameManager : MonoBehaviour
     {
         switch (turn)
         {
-            case TURN_YOUR:     currTurn = TURN_YOUR;   break;
-            case TURN_ENEMY:    currTurn = TURN_ENEMY;  break;
+            case TURN_YOUR: currTurn = TURN_YOUR; break;
+            case TURN_ENEMY: currTurn = TURN_ENEMY; break;
         }
     }
     public int Turn() { return currTurn; }
@@ -242,8 +248,8 @@ public class GameManager : MonoBehaviour
     {
         switch (currTurn)
         {
-            case TURN_YOUR:     currTurn = TURN_ENEMY;  break;
-            case TURN_ENEMY:    currTurn = TURN_YOUR;   break;
+            case TURN_YOUR: currTurn = TURN_ENEMY; break;
+            case TURN_ENEMY: currTurn = TURN_YOUR; break;
         }
     }
 
@@ -268,6 +274,22 @@ public class GameManager : MonoBehaviour
     private string selectAddress = string.Empty;
     public void SelectAddress(string value) { selectAddress = value; }
     public string SelectAddress() { return selectAddress; }
+
+    /// <summary>
+    /// 選択した持ち時間
+    /// </summary>
+    public enum TimeType : int
+    {
+        shortTime,
+        normalTime,
+        semiLongTime,
+        longTime,
+        veryLongTime
+    }
+    private int selectTime = (int)TimeType.normalTime;
+    public void SelectTime(int value) { selectTime = value; }
+    public int SelectTime() { return selectTime; }
+
 
     private void Awake()
     {

@@ -35,4 +35,9 @@ public class TitleStart : MonoBehaviour
 
         SetIsStart(false);
     }
+
+    public void ShowTitleMenu()
+    {
+        GameManager.I.titleMode = GameManager.Title.Menu;
+    }
 }

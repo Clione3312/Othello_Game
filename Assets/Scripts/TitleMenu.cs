@@ -39,4 +39,19 @@ public class TitleMenu : MonoBehaviour
     {
         GameManager.I.titleMode = GameManager.Title.Title;
     }
+
+    public void SelectSettingMenu()
+    {
+        GameManager.I.titleMode = GameManager.Title.Setting;
+    }
+
+    public void SelectOptionMenu()
+    {
+        GameManager.I.titleMode = GameManager.Title.Option;
+    }
+
+    public void SelectExitMenu()
+    {
+        GameManager.I.titleMode = GameManager.Title.Exit;
+    }
 }
